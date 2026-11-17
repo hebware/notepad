@@ -9,7 +9,7 @@ jobs:
         with:
           python-version: '3.11'
       - run: pip install pyinstaller
-      - run: pyinstaller --onefile --noconsole --name "Notepad" 1765672054149-notepad.py
+      - run: pyinstaller --onefile --noconsole --icon=notepad-icon.ico --name "Notepad" notepad_ctk.py
       - uses: actions/upload-artifact@v4
         with:
           name: Notepad-EXE
