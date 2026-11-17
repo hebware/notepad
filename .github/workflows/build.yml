@@ -34,7 +34,7 @@ jobs:
       - name: Build EXE
         shell: pwsh
         run: |
-          if (Test-Path "notepad_full.py") {
+          if (Test-Path "Notepad-Full.py") {
             if (Test-Path "notepad-icon.ico") {
               Write-Host "Building WITH icon..."
               pyinstaller --onefile --noconsole --icon=notepad-icon.ico --name "Notepad" notepad_full.py
