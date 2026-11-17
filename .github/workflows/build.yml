@@ -8,22 +8,14 @@ on:
 jobs:
   build:
     runs-on: windows-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v5
 
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
-
-      - name: DEBUG - Show files
-        shell: pwsh
-        run: |
-          Write-Host "=== Current folder ==="
-          Get-ChildItem
-          Write-Host "=== Check required files ==="
-          if (Test-Path "notepad-full.py") { Write-Host "FOUND notepad_full.py" } else { Write-Host "MISSING notepad_full.py" }
-          if (Test-Path "notepad-icon.ico") { Write-Host "FOUND notepad-icon.ico" } else { Write-Host "MISSING notepad-icon.ico - will build without icon" }
-          if (Test-Path "notepad_ctk.py") { Write-Host "FOUND notepad_ctk.py" } else { Write-Host "no notepad_ctk.py" }
 
       - name: Install dependencies
         shell: pwsh
@@ -36,29 +28,26 @@ jobs:
         run: |
           if (Test-Path "Notepad-Full.py") {
             if (Test-Path "notepad-icon.ico") {
-              Write-Host "Building WITH icon..."
-              pyinstaller --onefile --noconsole --icon=notepad-icon.ico --name "Notepad" notepad-Full.py
+              pyinstaller --onefile --noconsole --icon=notepad-icon.ico --name "Notepad" Notepad-Full.py
             } else {
-              Write-Host "Building WITHOUT icon..."
-              pyinstaller --onefile --noconsole --name "Notepad" notepad_full.py
+              pyinstaller --onefile --noconsole --name "Notepad" notepad-full.py
             }
-          } elseif (Test-Path "notepad_ctk.py") {
-            Write-Host "notepad_full.py missing, falling back to notepad_ctk.py..."
-            pyinstaller --onefile --noconsole --name "Notepad" notepad_ctk.py
+          } elseif (Test-Path "Notepad-Full.py") {
+            pyinstaller --onefile --noconsole --name "Notepad" Notepad-Full.py
           } else {
             Write-Host "ERROR: No .py file found!"
             Get-ChildItem
             exit 1
           }
 
-      - name: Show dist folder
-        shell: pwsh
-        run: Get-ChildItem dist
-
-      - name: Upload EXE
-        uses: actions/upload-artifact@v5
+      # --- תוקן: בלי actions/upload-artifact@v5 ---
+      # זה מה שגרם לאזהרת Node.js 20.
+      # במקום זה מעלים ל-Releases עם action שעובד על Node 24.
+      - name: Upload EXE to Release (No Node 20 warning)
+        uses: softprops/action-gh-release@v2
         with:
-          name: Notepad-FULL-EXE
-          path: dist/
-          if-no-files-found: error
+          tag_name: build-${{ github.run_number }}
+          name: Notepad Build ${{ github.run_number }}
+          files: dist/Notepad.exe
+          generate_release_notes: true
 
