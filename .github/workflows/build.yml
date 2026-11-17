@@ -37,7 +37,7 @@ jobs:
           if (Test-Path "Notepad-Full.py") {
             if (Test-Path "notepad-icon.ico") {
               Write-Host "Building WITH icon..."
-              pyinstaller --onefile --noconsole --icon=notepad-icon.ico --name "Notepad" notepad_full.py
+              pyinstaller --onefile --noconsole --icon=notepad-icon.ico --name "Notepad" notepad-Full.py
             } else {
               Write-Host "Building WITHOUT icon..."
               pyinstaller --onefile --noconsole --name "Notepad" notepad_full.py
