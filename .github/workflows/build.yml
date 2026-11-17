@@ -1,16 +1,31 @@
-name: Build EXE
-on: [push]
+name: Build EXE - FULL
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
 jobs:
   build:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
-          python-version: '3.11'
-      - run: pip install pyinstaller
-      - run: pyinstaller --onefile --noconsole --icon=notepad-icon.ico --name "Notepad" notepad_ctk.py
-      - uses: actions/upload-artifact@v4
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install customtkinter pyinstaller
+
+      - name: Build FULL EXE (CustomTkinter + RTL + Icon)
+        run: pyinstaller --onefile --noconsole --icon=notepad-icon.ico --name "Notepad" notepad_full.py
+
+      - name: Upload EXE
+        uses: actions/upload-artifact@v5
         with:
-          name: Notepad-EXE
+          name: Notepad-FULL-EXE
           path: dist/
+          if-no-files-found: error
