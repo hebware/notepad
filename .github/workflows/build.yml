@@ -21,7 +21,7 @@ jobs:
           Write-Host "=== Current folder ==="
           Get-ChildItem
           Write-Host "=== Check required files ==="
-          if (Test-Path "notepad_full.py") { Write-Host "FOUND notepad_full.py" } else { Write-Host "MISSING notepad_full.py" }
+          if (Test-Path "notepad-full.py") { Write-Host "FOUND notepad_full.py" } else { Write-Host "MISSING notepad_full.py" }
           if (Test-Path "notepad-icon.ico") { Write-Host "FOUND notepad-icon.ico" } else { Write-Host "MISSING notepad-icon.ico - will build without icon" }
           if (Test-Path "notepad_ctk.py") { Write-Host "FOUND notepad_ctk.py" } else { Write-Host "no notepad_ctk.py" }
 
